@@ -48,7 +48,7 @@ class UI {
         const row = document.createElement('tr');
         row.innerHTML = `
         <td hidden>${task.uniqueID}</td>
-        <td><a href="#" class="btn btn-outline-success btn-sm done"><i class="fa-solid fa-check"></i></a></td>
+        <td><a href="#" class="btn btn-success btn-sm done"><i class="fa-solid fa-check"></i></a></td>
         <td>${task.name}</td>
         <td>${task.priority}</td>
         <td>${task.deadline}</td>`;
