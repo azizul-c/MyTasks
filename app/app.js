@@ -4,6 +4,11 @@ class Task {
         this.name = name;
         this.priority = priority;
         this.deadline = deadline;
+        this.id = createID();
+    }
+
+    createID () {
+        // https://stackoverflow.com/questions/2020670/javascript-object-id
     }
 }
 
@@ -91,6 +96,7 @@ class Store {
     }
 
     static removeTask (task) {
+        const tasks = Store.getTasks();
 
     }
 }
