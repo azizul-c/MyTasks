@@ -11,8 +11,22 @@ class Task {
 class UI {
     static displayTasks () {
         
+        const StoredTasks = [
+            {
+                name: 'Do laundry',
+                priority: 1,
+                deadline: '2022-04-12'
+            },
+            {
+                name: 'Run errands',
+                priority: 1,
+                deadline: '2022-04-13'
+            }
+        ];
+
         // Get existing tasks from Local Storage
-        const tasks = Store.getTasks();
+        //const tasks = Store.getTasks();
+        const tasks = StoredTasks;
 
         // Add all the tasks to the UI
         tasks.forEach((task) => UI.addTasksToList(task));
@@ -60,10 +74,20 @@ class UI {
 class Store {
     static getTasks () {
 
+        let tasks;
+        if (localStorage.getItem('tasks') === null) {
+            tasks = [];
+        } else {
+            tasks = JSON.parse(localStorage.getItem('tasks'));
+        }
+
+        return tasks;
     }
 
     static addTasks (task) {
-
+        const tasks = Store.getTasks();
+        tasks.push (task);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
     static removeTask (task) {
@@ -72,6 +96,7 @@ class Store {
 }
 
 // Event: Display Tasks
+document.addEventListener('DOMContentLoaded', UI.displayTasks); // fires off as soon as app loads
 
 // Event: Add a Task
 document.querySelector('#task-form').addEventListener('submit', (e) => {
@@ -80,17 +105,17 @@ document.querySelector('#task-form').addEventListener('submit', (e) => {
     e.preventDefault();
 
     // Get input values
-    const task = document.querySelector('#task').value;
+    const name = document.querySelector('#task').value;
     const priority = document.querySelector('#priority').value;
     const deadline = document.querySelector('#deadline').value;
 
     // Validate
-    if (task === '') {
+    if (name === '') {
         UI.showAlert('Please describe the task.', 'danger');
     }
     else {
         // Instantiate Task
-        const task = new Task (task, priority, deadline);
+        const task = new Task (name, priority, deadline);
 
         // Add task to UI
         UI.addTasksToList(task);
@@ -107,4 +132,4 @@ document.querySelector('#task-form').addEventListener('submit', (e) => {
 })
 
 
-// Event: Remove a Task
+// Event: Complete a Task
