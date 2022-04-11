@@ -2,7 +2,15 @@
 class Task {
     constructor(name, priority, deadline, uniqueID) {
         this.name = name;
-        this.priority = priority;
+        
+        if (priority == 1) {
+            this.priority = 'Low';
+        } else if (priority == 2) {
+            this.priority = 'Medium';
+        } else if (priority == 3) {
+            this.priority = 'High';
+        }
+
         this.deadline = deadline;
         this.uniqueID = uniqueID;
     }
@@ -12,7 +20,7 @@ class Task {
 class UI {
     static displayTasks () {
         
-        const StoredTasks = [
+        /*const StoredTasks = [
             {
                 name: 'Do laundry',
                 priority: 1,
@@ -23,11 +31,12 @@ class UI {
                 priority: 1,
                 deadline: '2022-04-13'
             }
-        ];
+        ]
+        //const tasks = StoredTasks;
+        ;*/
 
         // Get existing tasks from Local Storage
         const tasks = Store.getTasks();
-        //const tasks = StoredTasks;
 
         // Add all the tasks to the UI
         tasks.forEach((task) => UI.addTasksToList(task));
