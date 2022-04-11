@@ -61,7 +61,11 @@ class UI {
         if (el.classList.contains('done')) {
             el.parentElement.parentElement.remove();
         }
+        else if (el.classList.contains('fa-check')) {
+            el.parentElement.parentElement.parentElement.remove();
+        }    
     }
+    
 
     static showAlert (message, className) {
         const div = document.createElement('div');
@@ -135,7 +139,7 @@ document.querySelector('#task-form').addEventListener('submit', (e) => {
     }
     else {
         // Instantiate Task
-        let uniqueID = createUniqueID ();
+        let uniqueID = self.crypto.randomUUID();
         const task = new Task (name, priority, deadline, uniqueID);
 
         // Add task to UI
@@ -165,7 +169,12 @@ document.querySelector('#task-list').addEventListener('click', (e) => {
     UI.completeTask(e.target);
 
     // Remove task from Store
-    Store.removeTask(e.target.parentElement.previousElementSibling.textContent);
+    if (e.target.parentElement.previousElementSibling == null) {
+        Store.removeTask(e.target.parentElement.parentElement.previousElementSibling.textContent);
+    } else {
+        Store.removeTask(e.target.parentElement.previousElementSibling.textContent);
+    }
+    
 
     // Show success message
     UI.showAlert('Task completed!', 'success');
