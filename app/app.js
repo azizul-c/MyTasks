@@ -1,14 +1,10 @@
 // Task Class: Represents a Task
 class Task {
-    constructor(name, priority, deadline) {
+    constructor(name, priority, deadline, uniqueID) {
         this.name = name;
         this.priority = priority;
         this.deadline = deadline;
-        this.id = createID();
-    }
-
-    createID () {
-        // https://stackoverflow.com/questions/2020670/javascript-object-id
+        this.uniqueID = uniqueID;
     }
 }
 
@@ -30,8 +26,8 @@ class UI {
         ];
 
         // Get existing tasks from Local Storage
-        //const tasks = Store.getTasks();
-        const tasks = StoredTasks;
+        const tasks = Store.getTasks();
+        //const tasks = StoredTasks;
 
         // Add all the tasks to the UI
         tasks.forEach((task) => UI.addTasksToList(task));
@@ -42,6 +38,7 @@ class UI {
 
         const row = document.createElement('tr');
         row.innerHTML = `
+        <td hidden>${task.uniqueID}</td>
         <td><a href="#" class="btn btn-success btn-sm done">✓</a></td>
         <td>${task.name}</td>
         <td>${task.priority}</td>
@@ -95,9 +92,16 @@ class Store {
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
-    static removeTask (task) {
+    static removeTask (uniqueID) {
         const tasks = Store.getTasks();
 
+        tasks.forEach((task, index) => {
+            if (task.uniqueID == uniqueID){
+                tasks.splice (index, 1);
+            }
+        });
+
+        localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 }
 
@@ -121,7 +125,8 @@ document.querySelector('#task-form').addEventListener('submit', (e) => {
     }
     else {
         // Instantiate Task
-        const task = new Task (name, priority, deadline);
+        let uniqueID = createUniqueID ();
+        const task = new Task (name, priority, deadline, uniqueID);
 
         // Add task to UI
         UI.addTasksToList(task);
@@ -137,5 +142,21 @@ document.querySelector('#task-form').addEventListener('submit', (e) => {
     }
 })
 
+function createUniqueID  () {
+    // Unique ID for each task
+    return self.crypto.randomUUID();
+}
+
 
 // Event: Complete a Task
+document.querySelector('#task-list').addEventListener('click', (e) => {
+
+    // Remove task from UI
+    UI.completeTask(e.target);
+
+    // Remove task from Store
+    Store.removeTask(e.target.parentElement.previousElementSibling.textContent);
+
+    // Show success message
+    UI.showAlert('Task completed!', 'success');
+})
